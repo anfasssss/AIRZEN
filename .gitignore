@@ -1,0 +1,22 @@
+# Build and temporary files
+.gradle/
+build/
+*/build/
+*/*/build/
+*.class
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.DS_Store
+
+# Local properties
+local.properties
+AIRZEN_Android_App/local.properties
+
+# Chrome temporary profiles
+.chrome_temp/
+
+# Keep root APK and PDF
+!AIRZEN.apk
+!AIRZEN_Complete_Project_Guide.pdf

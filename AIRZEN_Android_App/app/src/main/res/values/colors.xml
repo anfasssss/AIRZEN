@@ -1,0 +1,11 @@
+<resources>
+    <color name="bg_dark">#0B132B</color>
+    <color name="card_bg">#1C2541</color>
+    <color name="accent_cyan">#48CAE4</color>
+    <color name="text_white">#F0F3F8</color>
+    <color name="text_muted">#8D99AE</color>
+    <color name="danger_red">#E63946</color>
+    <color name="warn_orange">#F77F00</color>
+    <color name="success_green">#06D6A0</color>
+    <color name="btn_normal">#3A506B</color>
+</resources>

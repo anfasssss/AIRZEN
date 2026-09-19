@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AIRZEN - Complete Project Documentation</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm 16mm 14mm 16mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.5;
+      font-size: 11pt;
+      background: #ffffff;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .no-break {
+      page-break-inside: avoid;
+    }
+
+    /* HEADER BANNER */
+    .header-banner {
+      background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%);
+      color: #ffffff;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #3a506b;
+    }
+
+    .header-banner h1 {
+      font-size: 24pt;
+      letter-spacing: 1.5px;
+      color: #48cae4;
+      margin-bottom: 4px;
+    }
+
+    .header-banner .subtitle {
+      font-size: 11pt;
+      color: #cbd5e1;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .badge {
+      background: rgba(72, 202, 228, 0.15);
+      border: 1px solid #48cae4;
+      color: #48cae4;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 8.5pt;
+      font-weight: 600;
+    }
+
+    /* SECTION TITLES */
+    h2 {
+      font-size: 15pt;
+      color: #0f172a;
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 5px;
+      margin-top: 20px;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 12pt;
+      color: #0369a1;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px 0;
+      font-size: 9.5pt;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 7px 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    /* CALLOUT BOXES */
+    .callout {
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+      font-size: 10pt;
+      page-break-inside: avoid;
+    }
+
+    .callout-danger {
+      background-color: #fef2f2;
+      border-left: 5px solid #ef4444;
+      color: #991b1b;
+    }
+
+    .callout-warning {
+      background-color: #fffbeb;
+      border-left: 5px solid #f59e0b;
+      color: #92400e;
+    }
+
+    .callout-info {
+      background-color: #f0f9ff;
+      border-left: 5px solid #0284c7;
+      color: #075985;
+    }
+
+    .callout-success {
+      background-color: #f0fdf4;
+      border-left: 5px solid #10b981;
+      color: #065f46;
+    }
+
+    /* DIAGRAM BOX */
+    .diagram-box {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 12px 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      color: #334155;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* FEATURE GRID */
+    .feature-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+
+    .feature-card h4 {
+      color: #0f172a;
+      font-size: 10.5pt;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .code-inline {
+      background-color: #f1f5f9;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 9pt;
+      color: #0284c7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= PAGE 1: TITLE & OVERVIEW ================= -->
+  <div class="header-banner">
+    <h1>AIRZEN</h1>
+    <div class="subtitle">AIR INTELLIGENCE &amp; REGULAR FOR POLLUTION ENVIRONMENT NETWORK</div>
+    <div style="font-size: 9.5pt; color: #94a3b8; margin-bottom: 10px;">
+      Comprehensive System Engineering, Hardware Architecture &amp; Custom Android Application Guide
+    </div>
+    <div class="badges">
+      <span class="badge">ESP32 DevKit V1</span>
+      <span class="badge">Custom Android App (APK)</span>
+      <span class="badge">REST API &amp; mDNS</span>
+      <span class="badge">SSD1306 OLED</span>
+      <span class="badge">Automated Healthcare</span>
+    </div>
+  </div>
+
+  <h2>1. Project Executive Summary</h2>
+  <p>
+    <strong>AIRZEN</strong> is a multi-purpose, IoT-based smart healthcare and indoor environmental automation station powered by the <strong>ESP32</strong> microcontroller. Operating seamlessly over Wi-Fi, the system continuously analyzes environmental health parameters—hazardous air pollutants, ambient noise levels, temperature, humidity, and fire hazards.
+  </p>
+  <p>
+    Unlike conventional monitoring setups, AIRZEN provides an integrated autonomous protection loop: it triggers an active <strong>Ventilation Fan</strong> during air pollution or excessive heat, closes an automated <strong>Noise-Containment Window</strong> using a micro servo when sound levels spike, and initiates a <strong>5V Submersible Water Pump</strong> instantly upon flame detection while suppressing ventilation to prevent oxygen feeding the fire. Real-time telemetry is broadcast to an onboard high-tech 0.96" I2C OLED display and synchronized with a dedicated <strong>Custom Android Application (AIRZEN.apk)</strong> featuring audible siren alarms, push notifications, and remote controls for room lighting and door access.
+  </p>
+
+  <h2>2. Core Functional Subsystems</h2>
+
+  <div class="feature-card">
+    <h4>💨 Subsystem 1: Air Quality Monitoring &amp; Automatic Ventilation (MQ-135)</h4>
+    <p>
+      The MQ-135 electrochemical sensor detects ammonia, benzene, smoke, and hazardous gases. When air quality falls below safe thresholds (ADC reading &gt; 1500), the ESP32 automatically energizes Relay 1 to power on the Ventilation Fan, transmits a high-priority push notification to the user's smartphone, sounds an audible alarm on the phone, and displays live pollution metrics on both the app and OLED display. Built-in hysteresis turns the fan off when clean air levels normalize.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🔊 Subsystem 2: Acoustic Control &amp; Automated Window Servo (Sound Sensor)</h4>
+    <p>
+      Ambient noise levels are captured in real-time. When sound spikes beyond the threshold (noise &gt; 2400), <strong>Servo Motor 1 rotates to 90° to close the window</strong>, physically damping external noise. A phone alert and loud alarm notify the occupant. When ambient noise drops into prolonged silence, a low-sound alert is logged. Live sound intensity is streamed in real-time.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🌡️ Subsystem 3: Climate Regulation (DHT11 / DHT22 Sensor)</h4>
+    <p>
+      Monitors room temperature and humidity. If temperature crosses 35°C, a <em>"Temperature High"</em> message is dispatched, the Ventilation Fan turns ON, and the phone sounds an alarm. When humidity exceeds 75%, a <em>"Humidity High"</em> alert is triggered; as per design specifications, the ventilation fan is intentionally excluded for humidity.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🔥 Subsystem 4: Fire Emergency Suppression (Flame Sensor &amp; 5V Water Pump)</h4>
+    <p>
+      Equipped with an infrared flame sensor. Upon fire detection, Relay 2 immediately activates a <strong>5V Submersible Water Pump</strong> to disperse water throughout the target zone. Concurrently, the system activates a smartphone emergency siren, forces the ventilation fan OFF, and switches the OLED display into an inverted blinking emergency warning.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>💡 Subsystem 5: Remote Actuator Controls (Light &amp; Door Servo)</h4>
+    <p>
+      The custom Android app features dual interactive switches: one to toggle room illumination (LED on GPIO 25) and another to command <strong>Servo Motor 2</strong> to lock or unlock the room door between 0° and 90°.
+    </p>
+  </div>
+
+  <!-- ================= PAGE 2: HARDWARE & PINOUT ================= -->
+  <div class="page-break"></div>
+
+  <h2>3. Hardware Pinout &amp; Wiring Specification</h2>
+  <p>
+    All sensor pins have been selected to avoid ESP32 ADC2 conflicts with Wi-Fi. Analog inputs (MQ-135 and Sound) use <strong>ADC1</strong> channels (GPIO 34 and GPIO 35), ensuring uninterrupted analog reading while Wi-Fi transmission is active.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Component / Module</th>
+        <th>Module Pin</th>
+        <th>ESP32 GPIO</th>
+        <th>Signal Mode</th>
+        <th>Power Source</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>MQ-135 Air Quality Sensor</strong></td>
+        <td>AOUT (Analog)</td>
+        <td><strong>GPIO 34</strong></td>
+        <td>ADC1_CH6 Input</td>
+        <td>Ext. 5V Rail &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>Sound Detection Sensor</strong></td>
+        <td>AOUT (Analog)</td>
+        <td><strong>GPIO 35</strong></td>
+        <td>ADC1_CH7 Input</td>
+        <td>3.3V (ESP32) &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>DHT11 / DHT22 Sensor</strong></td>
+        <td>DATA / OUT</td>
+        <td><strong>GPIO 4</strong></td>
+        <td>Digital I/O</td>
+        <td>3.3V (ESP32) &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>Flame Sensor Module</strong></td>
+        <td>DOUT (Digital)</td>
+        <td><strong>GPIO 5</strong></td>
+        <td>Digital In (Active LOW)</td>
+        <td>3.3V / 5V &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>0.96" I2C OLED (SSD1306)</strong></td>
+        <td>SDA / SCL</td>
+        <td><strong>GPIO 21 / 22</strong></td>
+        <td>I2C Bus (0x3C)</td>
+        <td>3.3V (ESP32) &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>Window Micro Servo (SG90)</strong></td>
+        <td>Signal (Orange)</td>
+        <td><strong>GPIO 18</strong></td>
+        <td>PWM (50 Hz)</td>
+        <td>Ext. 5V Rail &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>Door Micro Servo (SG90)</strong></td>
+        <td>Signal (Orange)</td>
+        <td><strong>GPIO 19</strong></td>
+        <td>PWM (50 Hz)</td>
+        <td>Ext. 5V Rail &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>Relay 1 (Ventilation Fan)</strong></td>
+        <td>IN1</td>
+        <td><strong>GPIO 26</strong></td>
+        <td>Digital Out (Active LOW)</td>
+        <td>Ext. 5V Rail &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>Relay 2 (5V Water Pump)</strong></td>
+        <td>IN2</td>
+        <td><strong>GPIO 27</strong></td>
+        <td>Digital Out (Active LOW)</td>
+        <td>Ext. 5V Rail &amp; Common GND</td>
+      </tr>
+      <tr>
+        <td><strong>Room Lighting LED</strong></td>
+        <td>Anode (+)</td>
+        <td><strong>GPIO 25</strong></td>
+        <td>Digital Output</td>
+        <td>330Ω Resistor to GND</td>
+      </tr>
+      <tr>
+        <td><strong>Hardware Buzzer (Optional)</strong></td>
+        <td>Positive (+)</td>
+        <td><strong>GPIO 14</strong></td>
+        <td>Digital / PWM</td>
+        <td>ESP32 Pin &amp; GND</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>4. Power Distribution &amp; Common Ground Architecture</h2>
+
+  <div class="callout callout-danger">
+    <strong>CRITICAL POWER RULE:</strong> Never power the SG90 servos, relays, and water pump from the ESP32 3.3V or VIN pins! Motor stall currents will cause brownouts and continuous microcontroller reboot cycles. Use an external <strong>5V 2A–3A DC Power Adapter</strong>.
+  </div>
+
+  <div class="diagram-box">
+                      +------------------------------------------+
+                      |    EXTERNAL 5V 2A-3A DC POWER SUPPLY     |
+                      +--------------------+---------------------+
+                                           |
+               +---------------------------+---------------------------+
+               | (+5V VCC Rail)                                        | (GND Rail)
+               |                                                       |
+               +---> SG90 Servo 1 (Window) VCC                         +---> Servo 1 GND
+               +---> SG90 Servo 2 (Door) VCC                           +---> Servo 2 GND
+               +---> 2-Channel 5V Relay VCC                            +---> 2-Channel Relay GND
+               +---> 5V Submersible Pump (via Relay COM-NO)            +---> Water Pump Negative (-)
+               +---> MQ-135 Gas Sensor VCC                             +---> MQ-135 GND
+               +---> ESP32 VIN (5V Input)                              +---> ESP32 GND  <=== COMMON GROUND!
+  </div>
+
+  <div class="callout callout-info">
+    <strong>COMMON GROUND REQUIREMENT:</strong> The Ground (GND) wire of the external 5V power supply must connect directly to the ESP32 GND pin. Without this common electrical reference, PWM signals to servos and digital control signals to the relay coils will float and fail to switch reliably.
+  </div>
+
+  <!-- ================= PAGE 3: SOFTWARE & ANDROID APP ================= -->
+  <div class="page-break"></div>
+
+  <h2>5. Custom Android App (AIRZEN.apk)</h2>
+  <p>
+    AIRZEN operates with a standalone, dedicated Native Android Application (compiled APK size: <strong>5.4 MB</strong>). The application eliminates dependencies on third-party cloud brokers and connects directly to the ESP32 over local Wi-Fi.
+  </p>
+
+  <div class="feature-card">
+    <h4>📱 Key Mobile App Capabilities</h4>
+    <ul>
+      <li><strong>Real-Time Visual Dashboard:</strong> Shows live telemetry cards for Air Quality, Sound Amplitude, Temperature, and Humidity.</li>
+      <li><strong>Dynamic Acoustic Siren &amp; Vibration:</strong> The app includes an internal audio synthesis engine (<span class="code-inline">AlarmSoundManager</span>) that generates a loud two-tone police emergency siren and triggers phone vibration upon threshold breach.</li>
+      <li><strong>High-Priority Push Notifications:</strong> Utilizes Android's <span class="code-inline">NotificationChannel.IMPORTANCE_HIGH</span> to display Heads-Up emergency notifications even when the app is minimized.</li>
+      <li><strong>Interactive Room Controls:</strong> Dedicated Material switches to instantly toggle the Room Light LED and Door Servo lock.</li>
+      <li><strong>Auto-Discovery / Custom IP Config:</strong> Connects automatically to <span class="code-inline">http://airzen.local</span> via mDNS or allows manual IP entry.</li>
+    </ul>
+  </div>
+
+  <h3>How to Install &amp; Connect the APK:</h3>
+  <ol>
+    <li>Locate the compiled <span class="code-inline">AIRZEN.apk</span> in your project directory.</li>
+    <li>Transfer <span class="code-inline">AIRZEN.apk</span> to your Android phone via USB cable, WhatsApp, Google Drive, or Bluetooth.</li>
+    <li>Tap the file and select <strong>Install</strong> (enable <em>"Allow from this source"</em> if prompted).</li>
+    <li>Connect your phone to the same Wi-Fi network as the ESP32.</li>
+    <li>Open the AIRZEN app, verify the IP shown on the OLED display (or use <span class="code-inline">airzen.local</span>), and tap <strong>Connect</strong>.</li>
+  </ol>
+
+  <h2>6. ESP32 Firmware &amp; REST API Endpoints</h2>
+  <p>
+    The ESP32 firmware hosts an embedded HTTP REST server on port 80 with mDNS (<span class="code-inline">http://airzen.local</span>) and CORS headers.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Endpoint</th>
+        <th>Method</th>
+        <th>Parameters</th>
+        <th>Response / Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="code-inline">/api/data</span></td>
+        <td>GET</td>
+        <td>None</td>
+        <td>Returns full JSON telemetry: air quality, temp, hum, sound, actuator states, and active alert.</td>
+      </tr>
+      <tr>
+        <td><span class="code-inline">/api/control</span></td>
+        <td>POST / GET</td>
+        <td><span class="code-inline">device=light&amp;state=1|0</span></td>
+        <td>Switches Room Light LED ON or OFF.</td>
+      </tr>
+      <tr>
+        <td><span class="code-inline">/api/control</span></td>
+        <td>POST / GET</td>
+        <td><span class="code-inline">device=door&amp;state=1|0</span></td>
+        <td>Rotates Door Servo to 90° (Open) or 0° (Locked).</td>
+      </tr>
+      <tr>
+        <td><span class="code-inline">/api/control</span></td>
+        <td>POST / GET</td>
+        <td><span class="code-inline">device=window&amp;state=1|0</span></td>
+        <td>Manual override to open or close window servo.</td>
+      </tr>
+      <tr>
+        <td><span class="code-inline">/</span></td>
+        <td>GET</td>
+        <td>None</td>
+        <td>Serves the embedded mobile WebApp directly to browsers or WebViews.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ================= PAGE 4: OPERATION & MALAYALAM GUIDE ================= -->
+  <div class="page-break"></div>
+
+  <h2>7. മലയാളം ചുരുക്കരൂപം (Malayalam Executive Guide)</h2>
+  <p>
+    <strong>AIRZEN</strong> എന്നത് ESP32-ഉം കസ്റ്റം ആൻഡ്രോയിഡ് ആപ്പും (APK) ഉപയോഗിച്ച് പ്രവർത്തിക്കുന്ന അത്യാധുനിക ഹെൽത്ത്‌കെയർ &amp; സ്മാർട്ട് റൂം സിസ്റ്റമാണ്.
+  </p>
+
+  <div class="feature-card">
+    <h4>🔹 1. എയർ ക്വാളിറ്റി സിസ്റ്റം (MQ-135):</h4>
+    <p>
+      വായുവിൽ പുകയോ വിഷവാതകങ്ങളോ ഉണ്ടായാൽ വെന്റിലേഷൻ ഫാൻ ഓൺ ആകുന്നു. ഒപ്പം ഫോണിലേക്ക് നോട്ടിഫിക്കേഷനും ഫോണിൽ അലാറവും മുഴങ്ങുന്നു. ലൈവ് വാല്യൂസ് ആപ്പിലും OLED-ലും കാണാം.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🔹 2. സൗണ്ട് കൺട്രോൾ &amp; ജനൽ അടയൽ (Sound Sensor):</h4>
+    <p>
+      റൂമിൽ ശബ്ദം കൂടുമ്പോൾ പുറത്തെ ബഹളം ഒഴിവാക്കാൻ മൈക്രോ സെർവോ 1 ഉപയോഗിച്ച് ജനൽ തനിയെ അടയുന്നു. ഒപ്പം ഫോണിൽ അലേർട്ടും അലാറവും ലഭിക്കുന്നു. ശബ്ദം കുറയുമ്പോഴും ഇൻഫർമേഷൻ അലേർട്ട് ലഭിക്കും.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🔹 3. ടെമ്പറേച്ചർ &amp; ഹ്യൂമിഡിറ്റി (DHT11):</h4>
+    <p>
+      റൂമിലെ ചൂട് കൂടുമ്പോൾ വെന്റിലേഷൻ ഫാൻ ഓൺ ആകുകയും ഫോണിൽ അലാറം അടിക്കുകയും ചെയ്യുന്നു. ഈർപ്പം കൂടുമ്പോഴും അലേർട്ട് ലഭിക്കും (ഇതിൽ ഫാൻ പ്രവർത്തിക്കില്ല).
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🔹 4. ഫയർ ഡിറ്റക്ടിംഗ് &amp; വാട്ടർ പമ്പ് (Flame Sensor):</h4>
+    <p>
+      തീ കണ്ടാൽ ഉടൻ തന്നെ 5V വാട്ടർ പമ്പ് പ്രവർത്തിച്ച് വെള്ളം ചീറ്റുന്നു. തീ പടരാതിരിക്കാൻ വെന്റിലേഷൻ ഫാൻ ഓഫ് ആവുകയും ഫോണിൽ ലൗഡ് സൈറൺ അലാറം അടിക്കുകയും ചെയ്യുന്നു.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🔹 5. ആപ്പ് സ്വിച്ചുകൾ (LED ലൈറ്റ് &amp; ഡോർ):</h4>
+    <p>
+      ആപ്പിലെ ആദ്യത്തെ സ്വിച്ച് വഴി റൂമിലെ ലൈറ്റ് ഓൺ/ഓഫ് ചെയ്യാം. രണ്ടാമത്തെ സ്വിച്ച് വഴി മൈക്രോ സെർവോ 2 പ്രവർത്തിപ്പിച്ച് ഡോർ തുറക്കാനും അടയ്ക്കാനും സാധിക്കും.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <h4>🔹 6. OLED ഇന്റർഫേസ് (SSD1306):</h4>
+    <p>
+      പ്രോജക്റ്റ് ഓൺ ചെയ്യുമ്പോൾ "AIRZEN" എന്ന ലോഗോയോട് കൂടി കിടിലൻ ആനിമേഷനും സിസ്റ്റം ചെക്കിംഗും കാണിക്കുന്നു. തുടർന്ന് എല്ലാ റീഡിങ്ങുകളും ക്രമമായി മാറിമാറി കാണിക്കും.
+    </p>
+  </div>
+
+  <h2>8. System Verification &amp; Testing Checklist</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Test Step</th>
+        <th>Action</th>
+        <th>Expected Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Power On Self-Test</strong></td>
+        <td>Switch on 5V external power supply and ESP32</td>
+        <td>OLED displays "AIRZEN" circular radar animation, diagnostic steps, and connected IP address.</td>
+      </tr>
+      <tr>
+        <td><strong>Air Quality Trigger</strong></td>
+        <td>Introduce smoke or isopropyl alcohol near MQ-135</td>
+        <td>Relay 1 engages (Fan spins), OLED indicates HAZARDOUS, phone vibrates and sounds audio alarm.</td>
+      </tr>
+      <tr>
+        <td><strong>Sound Noise Trigger</strong></td>
+        <td>Clap loudly near sound sensor</td>
+        <td>Servo 1 moves to 90° (Window closes), phone pops high noise notification and alarm tone.</td>
+      </tr>
+      <tr>
+        <td><strong>Fire Emergency Trigger</strong></td>
+        <td>Expose flame sensor to a lighter flame</td>
+        <td>Relay 2 energizes (Water pump sprays water), Fan forced OFF, OLED flashes emergency banner, phone sounds emergency police siren.</td>
+      </tr>
+      <tr>
+        <td><strong>Manual Switches</strong></td>
+        <td>Toggle Room Light and Room Door switches in App</td>
+        <td>GPIO 25 LED illuminates instantly; Servo 2 smoothly opens and closes door between 0° and 90°.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</body>
+</html>

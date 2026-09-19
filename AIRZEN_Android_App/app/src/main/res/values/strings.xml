@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AIRZEN</string>
+    <string name="app_tagline">Smart Healthcare &amp; Environment Network</string>
+    <string name="air_quality">Air Quality</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
+    <string name="sound_level">Sound Level</string>
+    <string name="room_light">💡 Room Light</string>
+    <string name="room_door">🚪 Room Door</string>
+    <string name="window_status">Window:</string>
+    <string name="fan_status">Fan:</string>
+    <string name="pump_status">Water Pump:</string>
+    <string name="connect">Connect</string>
+    <string name="ip_hint">e.g. 192.168.1.105 or airzen.local</string>
+</resources>
