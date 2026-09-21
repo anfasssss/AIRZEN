@@ -1,222 +1,366 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
-    android:fillViewport="true">
+    android:background="@color/bg_dark">
 
-    <LinearLayout
+    <!-- MAIN DASHBOARD CONTENT (SCROLLABLE) -->
+    <ScrollView
+        android:id="@+id/scrollViewDashboard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- HEADER -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="AIRZEN"
-            android:textColor="@color/accent_cyan"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="HEALTHCARE &amp; ENVIRONMENT SYSTEM"
-            android:textColor="@color/text_muted"
-            android:textSize="11sp"
-            android:layout_marginBottom="12dp" />
-
-        <!-- CONNECTION BAR -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/card_bg"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="2dp"
-            android:layout_marginBottom="6dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <!-- HEADER BAR WITH LOGO -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
 
-                <EditText
-                    android:id="@+id/etEspIp"
+                <ImageView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:src="@drawable/app_logo"
+                    android:contentDescription="AIRZEN Logo" />
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@null"
-                    android:hint="ESP32 IP (e.g. 192.168.43.50)"
-                    android:textColorHint="@color/text_muted"
-                    android:textColor="@color/text_white"
-                    android:textSize="14sp"
-                    android:singleLine="true"
-                    android:padding="6dp" />
+                    android:orientation="vertical"
+                    android:layout_marginStart="12dp">
 
-                <Button
-                    android:id="@+id/btnConnect"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:text="Connect"
-                    android:textSize="12sp"
-                    android:backgroundTint="@color/accent_cyan"
-                    android:textColor="@color/bg_dark" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AIRZEN"
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HEALTHCARE &amp; ENVIRONMENT STATION"
+                        android:textColor="@color/text_muted"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- CONNECTION STATUS INDICATOR -->
-        <TextView
-            android:id="@+id/tvConnectionStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🔴 Disconnected. Enter ESP32 IP &amp; tap Connect"
-            android:textColor="@color/warn_orange"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_marginBottom="12dp" />
-
-        <!-- EMERGENCY / ALERT BANNER -->
-        <TextView
-            android:id="@+id/tvAlertBanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/danger_red"
-            android:textColor="@color/text_white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="12dp"
-            android:visibility="gone"
-            android:layout_marginBottom="12dp" />
-
-        <!-- SENSORS ROW 1: AIR QUALITY & SOUND -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <!-- Air Quality Card -->
+            <!-- CONNECTION BAR -->
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
                 app:cardBackgroundColor="@color/card_bg"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:id="@+id/etEspIp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="ESP32 IP (e.g. 192.168.43.45)"
+                        android:textColorHint="@color/text_muted"
+                        android:textColor="@color/text_white"
+                        android:textSize="14sp"
+                        android:inputType="number|numberDecimal"
+                        android:singleLine="true"
+                        android:padding="8dp" />
+
+                    <Button
+                        android:id="@+id/btnConnect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Connect"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/accent_cyan"
+                        android:textColor="@color/bg_dark" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- CONNECTION STATUS INDICATOR -->
+            <TextView
+                android:id="@+id/tvConnectionStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🔴 Disconnected. Enter ESP32 IP &amp; tap Connect"
+                android:textColor="@color/warn_orange"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+
+            <!-- EMERGENCY / ALERT BANNER -->
+            <TextView
+                android:id="@+id/tvAlertBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_badge_red"
+                android:textColor="@color/text_white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="14dp"
+                android:visibility="gone"
+                android:layout_marginBottom="14dp" />
+
+            <!-- ======================================================== -->
+            <!-- 1. MEGA PROMINENT FIRE EMERGENCY CARD -->
+            <!-- ======================================================== -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardFireStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:layout_marginBottom="14dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutFireInner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="16dp"
+                    android:background="@drawable/bg_card_fire_safe">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvFireIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🛡️"
+                            android:textSize="32sp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="FIRE EMERGENCY STATUS"
+                                android:textColor="@color/text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.05" />
+
+                            <TextView
+                                android:id="@+id/tvFireBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="SAFE (NO FIRE DETECTED)"
+                                android:textColor="@color/success_green"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvFireDesc"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="AIR QUALITY"
+                        android:text="Continuous flame sensor monitoring active. Environment secure."
                         android:textColor="@color/text_muted"
-                        android:textSize="11sp" />
+                        android:textSize="12sp"
+                        android:layout_marginTop="10dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#25355A"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp" />
 
                     <TextView
-                        android:id="@+id/tvAirQuality"
+                        android:id="@+id/tvWaterPump"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="--"
+                        android:text="💧 Water Pump (Relay 2): OFF (STANDBY)"
                         android:textColor="@color/accent_cyan"
-                        android:textSize="26sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvAirStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CLEAN"
-                        android:textColor="@color/success_green"
-                        android:textSize="11sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Sound Card -->
+            <!-- ======================================================== -->
+            <!-- 2. AIR QUALITY CARD (MQ-135) -->
+            <!-- ======================================================== -->
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
                 app:cardBackgroundColor="@color/card_bg"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="14dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🍃"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="AIR QUALITY (MQ-135)"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvAirStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_green"
+                            android:text="CLEAN &amp; FRESH"
+                            android:textColor="@color/success_green"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="bottom"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:id="@+id/tvAirQuality"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="@color/accent_cyan"
+                            android:textSize="38sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvAirQualityUnit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ADC / PPM"
+                            android:textColor="@color/text_muted"
+                            android:textSize="14sp"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginBottom="6dp" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pbAirQuality"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="8dp"
+                        android:max="4000"
+                        android:progress="450"
+                        android:progressTint="@color/accent_cyan"
+                        android:progressBackgroundTint="#25355A" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tvAirNote"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="SOUND LEVEL"
+                        android:text="Automatic ventilation fan triggers if air value exceeds 1500 ADC."
                         android:textColor="@color/text_muted"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/tvSound"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="@color/accent_cyan"
-                        android:textSize="26sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvSoundStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="OPTIMAL"
-                        android:textColor="@color/success_green"
                         android:textSize="11sp"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-        </LinearLayout>
 
-        <!-- SENSORS ROW 2: CLIMATE -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <!-- Temperature Card -->
+            <!-- ======================================================== -->
+            <!-- 3. TEMPERATURE CARD (DHT11) -->
+            <!-- ======================================================== -->
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
                 app:cardBackgroundColor="@color/card_bg"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="14dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TEMPERATURE"
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🌡️"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="TEMPERATURE"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvTempStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_green"
+                            android:text="NORMAL"
+                            android:textColor="@color/success_green"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvTemperature"
@@ -224,184 +368,421 @@
                         android:layout_height="wrap_content"
                         android:text="-- °C"
                         android:textColor="@color/text_white"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#25355A"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvVentFan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🌀 Ventilation Fan (Relay 1): OFF (IDLE)"
+                        android:textColor="@color/text_muted"
+                        android:textSize="13sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Humidity Card -->
+            <!-- ======================================================== -->
+            <!-- 4. HUMIDITY CARD (DHT11) -->
+            <!-- ======================================================== -->
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
                 app:cardBackgroundColor="@color/card_bg"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="14dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="HUMIDITY"
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="💧"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="HUMIDITY"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvHumidityStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_cyan"
+                            android:text="COMFORTABLE"
+                            android:textColor="@color/accent_cyan"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvHumidity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-- %"
-                        android:textColor="@color/text_white"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Maintains healthy indoor breathable moisture balance."
+                        android:textColor="@color/text_muted"
+                        android:textSize="11sp"
+                        android:layout_marginTop="4dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-        </LinearLayout>
 
-        <!-- MANUAL CONTROLS: LIGHT & DOOR -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MANUAL ROOM CONTROLS"
-            android:textColor="@color/text_muted"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="14dp">
-
-            <!-- Light Switch Card -->
+            <!-- ======================================================== -->
+            <!-- 5. SOUND & NOISE LEVEL CARD -->
+            <!-- ======================================================== -->
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
                 app:cardBackgroundColor="@color/card_bg"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="18dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔊"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="SOUND &amp; NOISE LEVEL"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvSoundStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_green"
+                            android:text="OPTIMAL"
+                            android:textColor="@color/success_green"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvSound"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textColor="@color/text_white"
+                        android:textSize="36sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#25355A"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvWindowStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🪟 Window Servo (GPIO 18): OPEN"
+                        android:textColor="@color/text_muted"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ======================================================== -->
+            <!-- ROOM ACTUATOR CONTROLS (2 LARGE CARDS) -->
+            <!-- ======================================================== -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ROOM ACTUATOR CONTROLS"
+                android:textColor="@color/accent_cyan"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Light Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💡 Room Light"
-                        android:textColor="@color/text_white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:text="💡"
+                        android:textSize="28sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Room Light (GPIO 25)"
+                            android:textColor="@color/text_white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvLightState"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LIGHT IS OFF"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchLight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp" />
+                        app:useMaterialThemeColors="false"
+                        app:thumbTint="@color/accent_cyan"
+                        app:trackTint="#3A506B" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Door Switch Card -->
+            <!-- Door Card -->
             <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
                 app:cardBackgroundColor="@color/card_bg"
-                app:cardCornerRadius="12dp">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp"
-                    android:gravity="center">
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🚪 Room Door"
-                        android:textColor="@color/text_white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:text="🚪"
+                        android:textSize="28sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Room Door Servo (GPIO 19)"
+                            android:textColor="@color/text_white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDoorState"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DOOR IS CLOSED (LOCKED)"
+                            android:textColor="@color/text_muted"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
+                    </LinearLayout>
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchDoor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp" />
+                        app:useMaterialThemeColors="false"
+                        app:thumbTint="@color/accent_cyan"
+                        app:trackTint="#3A506B" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
         </LinearLayout>
+    </ScrollView>
 
-        <!-- SYSTEM AUTOMATION STATUS -->
-        <androidx.cardview.widget.CardView
+    <!-- ================================================================ -->
+    <!-- STARTING SPLASH ANIMATION OVERLAY (ആപ്പ് ഓപ്പൺ ആകുമ്പോഴുള്ള അനിമേഷൻ) -->
+    <!-- ================================================================ -->
+    <FrameLayout
+        android:id="@+id/layoutSplash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_dark"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/card_bg"
-            app:cardCornerRadius="12dp"
-            android:layout_marginBottom="16dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
 
+            <!-- ROTATING RADAR & LOGO CONTAINER -->
+            <FrameLayout
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_gravity="center_horizontal">
+
+                <!-- Outer Radar Dashed Ring -->
+                <ImageView
+                    android:id="@+id/ivRadarOuter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/bg_radar_outer"
+                    android:contentDescription="Radar Ring" />
+
+                <!-- Inner Cyber Ring -->
+                <ImageView
+                    android:id="@+id/ivRadarInner"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/bg_splash_ring"
+                    android:contentDescription="Inner Ring" />
+
+                <!-- Central AIRZEN Logo -->
+                <ImageView
+                    android:id="@+id/ivSplashLogo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/app_logo"
+                    android:contentDescription="AIRZEN Central Logo" />
+            </FrameLayout>
+
+            <!-- TYPOGRAPHY -->
+            <TextView
+                android:id="@+id/tvSplashTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A I R Z E N"
+                android:textColor="@color/accent_cyan"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.18"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SMART HEALTHCARE &amp; ENVIRONMENT"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="4dp" />
+
+            <!-- DIAGNOSTIC PROGRESS LOADER -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="14dp">
+                android:layout_marginTop="40dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="AUTOMATION ACTUATORS"
-                    android:textColor="@color/text_muted"
-                    android:textSize="11sp"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvVentFan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🌀 Ventilation Fan: OFF"
-                    android:textColor="@color/text_white"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="4dp" />
+                    <TextView
+                        android:id="@+id/tvSplashStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Initializing System..."
+                        android:textColor="@color/accent_cyan"
+                        android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/tvWindowStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🪟 Window (Noise Auto): OPEN"
-                    android:textColor="@color/text_white"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="4dp" />
+                    <TextView
+                        android:id="@+id/tvSplashPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="15%"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvWaterPump"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="💧 Water Pump: OFF"
-                    android:textColor="@color/text_white"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/tvFlameStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔥 Flame Status: CLEAR"
-                    android:textColor="@color/success_green"
-                    android:textSize="13sp" />
+                <ProgressBar
+                    android:id="@+id/pbSplash"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:layout_marginTop="8dp"
+                    android:max="100"
+                    android:progress="15"
+                    android:progressTint="@color/accent_cyan"
+                    android:progressBackgroundTint="#25355A" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
