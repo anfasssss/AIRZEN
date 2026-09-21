@@ -10,9 +10,12 @@
 // =============================================================================
 // 1. WI-FI CREDENTIALS & SERVER CONFIGURATION
 // =============================================================================
-// Set your 2.4 GHz Wi-Fi credentials (ESP32 does not support 5 GHz Wi-Fi)
+#ifndef WIFI_SSID
 #define WIFI_SSID           "Your_WiFi_SSID"
+#endif
+#ifndef WIFI_PASSWORD
 #define WIFI_PASSWORD       "Your_WiFi_Password"
+#endif
 
 // Local mDNS Hostname: Allows access via http://airzen.local in your custom app or browser
 #define MDNS_HOSTNAME       "airzen"

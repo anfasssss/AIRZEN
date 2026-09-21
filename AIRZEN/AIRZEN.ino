@@ -24,6 +24,14 @@
 #include <Adafruit_SSD1306.h>
 #include <ESP32Servo.h>
 
+// =============================================================================
+// WI-FI CREDENTIALS (ഇവിടെ നിങ്ങളുടെ ഹോട്ട്‌സ്‌പോട്ട് / വൈഫൈ നൽകുക)
+// =============================================================================
+// നിങ്ങളുടെ ഫോണിലെ Personal Hotspot അല്ലെങ്കിൽ വീട്ടിലെ Wi-Fi പേരും പാസ്‌വേഡും ഇവിടെ നൽകുക
+// ശ്രദ്ധിക്കുക: ESP32 സപ്പോർട്ട് ചെയ്യുന്നത് 2.4 GHz Band ആണ് (iPhone Hotspot ആണെങ്കിൽ 'Maximize Compatibility' ഓൺ ചെയ്യുക)
+#define WIFI_SSID       "Your_WiFi_SSID"        // നിങ്ങളുടെ Wi-Fi / Hotspot പേര്
+#define WIFI_PASSWORD   "Your_WiFi_Password"    // Wi-Fi / Hotspot പാസ്‌വേഡ്
+
 #include "config.h"
 
 // =============================================================================
@@ -320,23 +328,32 @@ void setup() {
   Serial.println(WIFI_SSID);
 
   display.clearDisplay();
+  display.drawRoundRect(0, 0, 128, 64, 4, SSD1306_WHITE);
+  display.fillRect(0, 0, 128, 14, SSD1306_WHITE);
+  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
   display.setTextSize(1);
-  display.setCursor(10, 15);
-  display.println("Connecting to WiFi");
-  display.setCursor(10, 30);
-  display.println(WIFI_SSID);
-  display.drawRect(10, 48, 108, 8, SSD1306_WHITE);
-  display.fillRect(12, 50, 40, 4, SSD1306_WHITE);
+  display.setCursor(14, 3);
+  display.print("CONNECTING WIFI");
+
+  display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+  display.setCursor(8, 20);
+  display.print("SSID: ");
+  display.print(WIFI_SSID);
+
+  display.drawRect(12, 46, 104, 8, SSD1306_WHITE);
   display.display();
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
   int attempts = 0;
-  while (WiFi.status() != WL_CONNECTED && attempts < 30) {
-    delay(500);
+  while (WiFi.status() != WL_CONNECTED && attempts < 35) {
+    delay(400);
     Serial.print(".");
     attempts++;
+    int barW = (attempts * 100) / 35;
+    display.fillRect(14, 48, barW, 4, SSD1306_WHITE);
+    display.display();
   }
 
   if (WiFi.status() == WL_CONNECTED) {
@@ -349,14 +366,49 @@ void setup() {
       Serial.printf("[mDNS] Responder started! Access via http://%s.local\n", MDNS_HOSTNAME);
     }
 
-    display.fillRect(12, 50, 104, 4, SSD1306_WHITE);
-    display.setCursor(10, 30);
-    display.print("IP: ");
-    display.println(WiFi.localIP());
+    // =========================================================================
+    // PROMINENT IP DISPLAY ON OLED (ആപ്പിൽ നൽകാനുള്ള ഐപി സ്ക്രീനിൽ വ്യക്തമായി കാണിക്കുന്നു)
+    // =========================================================================
+    display.clearDisplay();
+    display.drawRoundRect(0, 0, 128, 64, 4, SSD1306_WHITE);
+    display.fillRect(0, 0, 128, 14, SSD1306_WHITE);
+    display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+    display.setTextSize(1);
+    display.setCursor(16, 3);
+    display.print("WIFI CONNECTED!");
+
+    display.setTextColor(SSD1306_WHITE, SSD1306_BLACK);
+    display.setCursor(8, 19);
+    display.print("APP IP ADDRESS:");
+
+    display.setCursor(8, 33);
+    display.print(">> ");
+    display.print(WiFi.localIP());
+
+    display.drawFastHLine(6, 46, 116, SSD1306_WHITE);
+    display.setCursor(8, 51);
+    display.print("Enter IP in App ->");
     display.display();
-    delay(1000);
+
+    // Friendly buzzer confirmation
+    tone(PIN_BUZZER, 2000, 100);
+    delay(120);
+    tone(PIN_BUZZER, 2600, 150);
+
+    // Keep IP visible for 4.5 seconds so user can read/type it
+    delay(4500);
   } else {
     Serial.println("\n[WiFi] Connection timeout! Running in offline mode.");
+    display.clearDisplay();
+    display.drawRoundRect(0, 0, 128, 64, 4, SSD1306_WHITE);
+    display.setCursor(18, 16);
+    display.print("WIFI NOT FOUND!");
+    display.setCursor(12, 32);
+    display.print("Check SSID / Pass");
+    display.setCursor(14, 48);
+    display.print("Running Offline Mode");
+    display.display();
+    delay(3000);
   }
 
   // 6. Setup Web Server REST Endpoints
@@ -386,7 +438,7 @@ void loop() {
     updateOledDisplay(); // Continuous blinking during fire
   } else if (currentMillis - lastOledPageSwitch >= OLED_PAGE_INTERVAL) {
     lastOledPageSwitch = currentMillis;
-    currentOledPage = (currentOledPage + 1) % 3;
+    currentOledPage = (currentOledPage + 1) % 4;
     updateOledDisplay();
   }
 }
@@ -789,13 +841,38 @@ void updateOledDisplay() {
     display.setCursor(2, 51);
     display.printf("Light  : %s", lightState ? "ON" : "OFF");
   }
+  // PAGE 3: NETWORK & APP CONNECTION IP
+  else if (currentOledPage == 3) {
+    display.setCursor(2, 15);
+    display.print("NETWORK / APP INFO");
+    display.drawFastHLine(0, 24, 128, SSD1306_WHITE);
 
-  // Pagination dots
-  for (int p = 0; p < 3; p++) {
-    if (p == currentOledPage) {
-      display.fillCircle(112 + (p * 5), 61, 1, SSD1306_WHITE);
+    display.setCursor(2, 28);
+    display.print("WiFi: ");
+    if (WiFi.status() == WL_CONNECTED) {
+      display.print(WiFi.SSID());
     } else {
-      display.drawPixel(112 + (p * 5), 61, SSD1306_WHITE);
+      display.print("Disconnected");
+    }
+
+    display.setCursor(2, 40);
+    display.print("IP  : ");
+    if (WiFi.status() == WL_CONNECTED) {
+      display.print(WiFi.localIP());
+    } else {
+      display.print("0.0.0.0");
+    }
+
+    display.setCursor(2, 52);
+    display.print("Port: 80 | REST API");
+  }
+
+  // Pagination dots (4 pages: 0, 1, 2, 3)
+  for (int p = 0; p < 4; p++) {
+    if (p == currentOledPage) {
+      display.fillCircle(106 + (p * 5), 61, 1, SSD1306_WHITE);
+    } else {
+      display.drawPixel(106 + (p * 5), 61, SSD1306_WHITE);
     }
   }
 
