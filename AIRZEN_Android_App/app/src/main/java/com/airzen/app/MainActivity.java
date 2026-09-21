@@ -47,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
     private SwitchMaterial switchLight, switchDoor;
 
     // State & Helpers
-    private String espBaseUrl = "http://airzen.local";
+    private TextView tvConnectionStatus;
+    private String espBaseUrl = "";
+    private int consecutiveFailures = 0;
+    private boolean isConnected = false;
     private final ExecutorService networkExecutor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private AlarmSoundManager alarmSoundManager;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         etEspIp = findViewById(R.id.etEspIp);
         btnConnect = findViewById(R.id.btnConnect);
+        tvConnectionStatus = findViewById(R.id.tvConnectionStatus);
         tvAlertBanner = findViewById(R.id.tvAlertBanner);
         tvAirQuality = findViewById(R.id.tvAirQuality);
         tvAirStatus = findViewById(R.id.tvAirStatus);
@@ -90,9 +94,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadSavedIp() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        String savedIp = prefs.getString(KEY_ESP_IP, "airzen.local");
-        etEspIp.setText(savedIp);
-        updateBaseUrl(savedIp);
+        String savedIp = prefs.getString(KEY_ESP_IP, "");
+        if (savedIp.isEmpty() || "airzen.local".equalsIgnoreCase(savedIp)) {
+            etEspIp.setText("");
+            espBaseUrl = "";
+            tvConnectionStatus.setText("🔴 Enter ESP32 IP address above & tap Connect");
+            tvConnectionStatus.setTextColor(Color.parseColor("#F77F00"));
+        } else {
+            etEspIp.setText(savedIp);
+            updateBaseUrl(savedIp);
+        }
     }
 
     private void updateBaseUrl(String input) {
@@ -112,15 +123,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String ip = etEspIp.getText().toString().trim();
                 if (ip.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Please enter ESP32 IP or airzen.local", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please enter ESP32 IP address (e.g. 192.168.43.50)", Toast.LENGTH_LONG).show();
                     return;
+                }
+                if ("airzen.local".equalsIgnoreCase(ip) || ip.endsWith(".local")) {
+                    Toast.makeText(MainActivity.this, "⚠️ Note: On Hotspot, 'airzen.local' won't work. Please use number IP (e.g. 192.168.43.xxx)!", Toast.LENGTH_LONG).show();
                 }
                 updateBaseUrl(ip);
                 getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                         .edit()
                         .putString(KEY_ESP_IP, ip)
                         .apply();
-                Toast.makeText(MainActivity.this, "Connecting to " + espBaseUrl, Toast.LENGTH_SHORT).show();
+                tvConnectionStatus.setText("🟡 Connecting to " + espBaseUrl + "...");
+                tvConnectionStatus.setTextColor(Color.parseColor("#F77F00"));
+                consecutiveFailures = 0;
+                fetchTelemetryData();
             }
         });
 
@@ -158,6 +175,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchTelemetryData() {
+        if (espBaseUrl == null || espBaseUrl.isEmpty()) return;
+
         networkExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -165,10 +184,11 @@ public class MainActivity extends AppCompatActivity {
                     URL url = new URL(espBaseUrl + "/api/data");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(1500);
-                    conn.setReadTimeout(1500);
+                    conn.setConnectTimeout(2000);
+                    conn.setReadTimeout(2000);
 
-                    if (conn.getResponseCode() == 200) {
+                    int responseCode = conn.getResponseCode();
+                    if (responseCode == 200) {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                         StringBuilder sb = new StringBuilder();
                         String line;
@@ -181,13 +201,33 @@ public class MainActivity extends AppCompatActivity {
                         mainHandler.post(new Runnable() {
                             @Override
                             public void run() {
+                                consecutiveFailures = 0;
+                                isConnected = true;
+                                tvConnectionStatus.setText("🟢 Connected to " + espBaseUrl);
+                                tvConnectionStatus.setTextColor(Color.parseColor("#06D6A0"));
                                 updateUIFromJson(jsonStr);
                             }
                         });
+                    } else {
+                        handleConnectionFailure("Server returned HTTP " + responseCode);
                     }
                     conn.disconnect();
-                } catch (Exception ignored) {
-                    // Handled gracefully during network disconnects
+                } catch (final Exception e) {
+                    handleConnectionFailure(e.getMessage() != null ? e.getMessage() : "Timeout / Host unreachable");
+                }
+            }
+        });
+    }
+
+    private void handleConnectionFailure(final String errorMsg) {
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                consecutiveFailures++;
+                if (consecutiveFailures >= 2) {
+                    isConnected = false;
+                    tvConnectionStatus.setText("🔴 Cannot connect to " + espBaseUrl + "\nVerify ESP32 is on Hotspot and check IP address.");
+                    tvConnectionStatus.setTextColor(Color.parseColor("#E63946"));
                 }
             }
         });
