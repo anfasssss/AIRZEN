@@ -176,9 +176,8 @@ struct ContentView: View {
                     .background(Color(red: 25/255, green: 35/255, blue: 62/255))
                     .cornerRadius(10)
                     .foregroundColor(.white)
-                    .keyboardType(.numbersAndPunctuation)
-                    .autocapitalization(.none)
                     .font(.system(size: 14, weight: .medium, design: .monospaced))
+                    .ipKeyboardModifiers()
                 
                 Button(action: {
                     savedIp = ipInput.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -975,4 +974,19 @@ struct SplashAnimationView: View {
 
 #Preview {
     ContentView()
+}
+
+// MARK: - Cross-Platform View Extensions
+extension View {
+    @ViewBuilder
+    func ipKeyboardModifiers() -> some View {
+        #if os(iOS)
+        self
+            .keyboardType(.numbersAndPunctuation)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled(true)
+        #else
+        self
+        #endif
+    }
 }
