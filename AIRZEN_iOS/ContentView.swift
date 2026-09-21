@@ -31,9 +31,41 @@ struct ContentView: View {
     @State private var doorSwitch: Bool = false
     @State private var isUserToggling: Bool = false
     
+    // Splash Animation State
+    @State private var isShowingSplash: Bool = true
+    
     let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     
     var body: some View {
+        ZStack {
+            // Main Dashboard View
+            mainDashboard
+                .opacity(isShowingSplash ? 0 : 1)
+            
+            // Starting Splash Animation Screen
+            if isShowingSplash {
+                SplashAnimationView {
+                    withAnimation(.easeInOut(duration: 0.7)) {
+                        isShowingSplash = false
+                    }
+                }
+                .transition(.asymmetric(insertion: .identity, removal: .opacity.combined(with: .scale(scale: 1.08))))
+                .zIndex(10)
+            }
+        }
+        .onAppear {
+            ipInput = savedIp
+            fetchData()
+        }
+        .onReceive(timer) { _ in
+            if !isShowingSplash {
+                fetchData()
+            }
+        }
+    }
+    
+    // MARK: - Main Dashboard
+    var mainDashboard: some View {
         ZStack {
             Color(red: 11/255, green: 19/255, blue: 43/255).ignoresSafeArea()
             
@@ -207,7 +239,7 @@ struct ContentView: View {
                                 
                                 Toggle("", isOn: $lightSwitch)
                                     .labelsHidden()
-                                    .onChange(of: lightSwitch) { val in
+                                    .onChange(of: lightSwitch) { _, val in
                                         if isUserToggling { sendControl(device: "light", state: val ? "1" : "0") }
                                     }
                             }
@@ -225,7 +257,7 @@ struct ContentView: View {
                                 
                                 Toggle("", isOn: $doorSwitch)
                                     .labelsHidden()
-                                    .onChange(of: doorSwitch) { val in
+                                    .onChange(of: doorSwitch) { _, val in
                                         if isUserToggling { sendControl(device: "door", state: val ? "1" : "0") }
                                     }
                             }
@@ -262,13 +294,6 @@ struct ContentView: View {
                 .padding()
             }
         }
-        .onAppear {
-            ipInput = savedIp
-            fetchData()
-        }
-        .onReceive(timer) { _ in
-            fetchData()
-        }
     }
     
     // MARK: - Networking
@@ -294,7 +319,7 @@ struct ContentView: View {
                     
                     // Audio siren feedback on alert
                     if let alert = decoded.activeAlert, alert != "NONE" {
-                        AudioServicesPlaySystemSound(1005) // iOS Alert beep
+                        AudioServicesPlaySystemSound(1005)
                     }
                 } else {
                     self.isConnected = false
@@ -326,4 +351,197 @@ struct ContentView: View {
         if val >= 900 { return .orange }
         return .green
     }
+}
+
+// =============================================================================
+// FUTURISTIC STARTING ANIMATION VIEW (SPLASH SCREEN)
+// =============================================================================
+struct SplashAnimationView: View {
+    var onFinished: () -> Void
+    
+    @State private var logoScale: CGFloat = 0.3
+    @State private var logoOpacity: Double = 0.0
+    @State private var ringScale1: CGFloat = 0.5
+    @State private var ringScale2: CGFloat = 0.5
+    @State private var ringOpacity: Double = 0.8
+    @State private var rotationDegree: Double = 0
+    @State private var textTracking: CGFloat = 12
+    @State private var textOpacity: Double = 0.0
+    @State private var progressWidth: CGFloat = 0
+    @State private var statusIndex: Int = 0
+    
+    let statusMessages = [
+        "Initializing Sensor Core...",
+        "Calibrating Environment AI...",
+        "Connecting Health Stream...",
+        "AIRZEN System Ready"
+    ]
+    
+    var body: some View {
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 7/255, green: 13/255, blue: 31/255),
+                    Color(red: 11/255, green: 19/255, blue: 43/255),
+                    Color(red: 28/255, green: 37/255, blue: 65/255)
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+            
+            VStack(spacing: 24) {
+                Spacer()
+                
+                // CENTER LOGO WITH ROTATING RADAR RINGS
+                ZStack {
+                    // Outer Expanding Glow Ring
+                    Circle()
+                        .stroke(
+                            Color(red: 72/255, green: 202/255, blue: 228/255).opacity(ringOpacity * 0.3),
+                            lineWidth: 1.5
+                        )
+                        .frame(width: 220, height: 220)
+                        .scaleEffect(ringScale2)
+                    
+                    // Middle Pulsing Ring
+                    Circle()
+                        .stroke(
+                            Color(red: 6/255, green: 214/255, blue: 160/255).opacity(ringOpacity * 0.5),
+                            lineWidth: 2
+                        )
+                        .frame(width: 170, height: 170)
+                        .scaleEffect(ringScale1)
+                    
+                    // Rotating Cybernetic Dash Ring
+                    Circle()
+                        .stroke(
+                            style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [8, 12])
+                        )
+                        .foregroundColor(Color(red: 72/255, green: 202/255, blue: 228/255).opacity(0.7))
+                        .frame(width: 136, height: 136)
+                        .rotationEffect(.degrees(rotationDegree))
+                    
+                    // Central Glowing App Logo
+                    Image("AppLogo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 104, height: 104)
+                        .clipShape(RoundedRectangle(cornerRadius: 24))
+                        .shadow(color: Color(red: 72/255, green: 202/255, blue: 228/255).opacity(0.7), radius: 20)
+                        .shadow(color: Color(red: 6/255, green: 214/255, blue: 160/255).opacity(0.4), radius: 30)
+                        .scaleEffect(logoScale)
+                        .opacity(logoOpacity)
+                }
+                
+                // TITLE & SUBTITLE WITH CINEMATIC REVEAL
+                VStack(spacing: 6) {
+                    Text("AIRZEN")
+                        .font(.system(size: 34, weight: .black, design: .rounded))
+                        .foregroundColor(Color(red: 72/255, green: 202/255, blue: 228/255))
+                        .tracking(textTracking)
+                        .opacity(textOpacity)
+                        .shadow(color: Color(red: 72/255, green: 202/255, blue: 228/255).opacity(0.5), radius: 10)
+                    
+                    Text("SMART HEALTHCARE & ENVIRONMENT NETWORK")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(Color.gray.opacity(0.9))
+                        .opacity(textOpacity)
+                }
+                .padding(.top, 10)
+                
+                Spacer()
+                
+                // DIAGNOSTIC STATUS LOADER
+                VStack(spacing: 8) {
+                    Text(statusMessages[statusIndex])
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .foregroundColor(Color(red: 72/255, green: 202/255, blue: 228/255))
+                        .opacity(textOpacity)
+                        .animation(.easeInOut(duration: 0.25), value: statusIndex)
+                    
+                    // Loading Progress Bar
+                    ZStack(alignment: .leading) {
+                        Capsule()
+                            .fill(Color.white.opacity(0.1))
+                            .frame(width: 200, height: 4)
+                        
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 6/255, green: 214/255, blue: 160/255),
+                                        Color(red: 72/255, green: 202/255, blue: 228/255)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .frame(width: progressWidth, height: 4)
+                            .shadow(color: Color(red: 72/255, green: 202/255, blue: 228/255).opacity(0.8), radius: 6)
+                    }
+                }
+                .padding(.bottom, 40)
+            }
+        }
+        .onAppear {
+            runAnimationSequence()
+        }
+    }
+    
+    // MARK: - Animation Timeline
+    private func runAnimationSequence() {
+        // Continuous Radar Rotation
+        withAnimation(.linear(duration: 6).repeatForever(autoreverses: false)) {
+            rotationDegree = 360
+        }
+        
+        // Phase 1: Logo & Rings Pop
+        withAnimation(.spring(response: 0.7, dampingFraction: 0.6)) {
+            logoScale = 1.0
+            logoOpacity = 1.0
+        }
+        
+        // Expanding Outer Rings
+        withAnimation(.easeOut(duration: 1.2).repeatForever(autoreverses: true)) {
+            ringScale1 = 1.08
+            ringScale2 = 1.15
+            ringOpacity = 0.3
+        }
+        
+        // Phase 2: Cinematic Text Tracking Animation
+        withAnimation(.easeOut(duration: 0.8).delay(0.2)) {
+            textTracking = 3
+            textOpacity = 1.0
+        }
+        
+        // Phase 3: Progressive Diagnostic Checks
+        withAnimation(.easeInOut(duration: 2.2).delay(0.1)) {
+            progressWidth = 200
+        }
+        
+        // Status Step 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            statusIndex = 1
+        }
+        // Status Step 2
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            statusIndex = 2
+        }
+        // Status Step 3 (Ready)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+            statusIndex = 3
+            AudioServicesPlaySystemSound(1519) // Subtle iOS Haptic Pop
+        }
+        
+        // Phase 4: Seamless Dismiss into Dashboard
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            onFinished()
+        }
+    }
+}
+
+#Preview {
+    ContentView()
 }
