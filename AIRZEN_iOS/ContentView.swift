@@ -1,6 +1,7 @@
 import SwiftUI
 import AudioToolbox
 import AVFoundation
+import Combine
 
 struct TelemetryData: Codable {
     var airQuality: Int?
@@ -40,9 +41,16 @@ struct ContentView: View {
                 VStack(spacing: 16) {
                     
                     // HEADER
-                    VStack(spacing: 4) {
+                    VStack(spacing: 8) {
+                        Image("AppLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 76, height: 76)
+                            .clipShape(RoundedRectangle(cornerRadius: 18))
+                            .shadow(color: Color(red: 72/255, green: 202/255, blue: 228/255).opacity(0.4), radius: 10)
+                        
                         Text("AIRZEN")
-                            .font(.system(size: 30, weight: .black, design: .rounded))
+                            .font(.system(size: 28, weight: .black, design: .rounded))
                             .foregroundColor(Color(red: 72/255, green: 202/255, blue: 228/255))
                             .tracking(2)
                         
