@@ -40,6 +40,9 @@ struct ContentView: View {
     // Splash Animation State
     @State private var isShowingSplash: Bool = true
     
+    // Continuous Siren & Vibration Alarm Manager
+    @StateObject private var sirenManager = SirenSoundManager.shared
+    
     // Polling Timer (1 second)
     let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     
@@ -228,6 +231,21 @@ struct ContentView: View {
                     .foregroundColor(.white.opacity(0.95))
             }
             Spacer()
+            
+            Button(action: {
+                sirenManager.userSilenceToggle()
+            }) {
+                HStack(spacing: 4) {
+                    Image(systemName: sirenManager.isSirenActive ? "speaker.wave.3.fill" : "speaker.slash.fill")
+                    Text(sirenManager.isSirenActive ? "Silence" : "Muted")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.black.opacity(0.35))
+                .cornerRadius(8)
+                .foregroundColor(.white)
+            }
         }
         .padding(14)
         .background(isFire ? Color(red: 230/255, green: 57/255, blue: 70/255) : Color(red: 247/255, green: 127/255, blue: 0/255))
@@ -746,9 +764,13 @@ struct ContentView: View {
                     self.doorSwitch = decoded.doorOpen ?? false
                     isUserToggling = true
                     
-                    // Audio siren feedback on alert
+                    // Continuous audio siren & haptic feedback on alert
                     if let alert = decoded.activeAlert, alert != "NONE" {
-                        AudioServicesPlaySystemSound(1005)
+                        let isFire = alert == "FIRE_EMERGENCY"
+                        sirenManager.triggerAlarm(isFire: isFire)
+                    } else {
+                        sirenManager.stopAlarm()
+                        sirenManager.resetUserMuteIfNormal()
                     }
                 } else {
                     self.isConnected = false
@@ -988,5 +1010,134 @@ extension View {
         #else
         self
         #endif
+    }
+}
+
+// MARK: - CONTINUOUS SIREN & VIBRATION ALARM MANAGER
+final class SirenSoundManager: ObservableObject {
+    static let shared = SirenSoundManager()
+    
+    @Published var isSirenActive: Bool = false
+    @Published var isMutedByUser: Bool = false
+    
+    private var player: AVAudioPlayer?
+    private var vibrationTimer: Timer?
+    
+    private init() {}
+    
+    func triggerAlarm(isFire: Bool) {
+        guard !isMutedByUser else { return }
+        guard !isSirenActive else { return }
+        
+        isSirenActive = true
+        
+        #if os(iOS)
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .alarm, options: [.duckOthers])
+            try session.setActive(true)
+        } catch {
+            print("[AIRZEN Siren] AudioSession error: \(error)")
+        }
+        #endif
+        
+        if let wavData = createSirenWav(isFire: isFire) {
+            do {
+                player = try AVAudioPlayer(data: wavData)
+                player?.numberOfLoops = -1 // Continuous looping siren!
+                player?.volume = 1.0
+                player?.prepareToPlay()
+                player?.play()
+            } catch {
+                print("[AIRZEN Siren] Player error: \(error)")
+            }
+        }
+        
+        // Continuous vibration pulse
+        vibrationTimer?.invalidate()
+        vibrationTimer = Timer.scheduledTimer(withTimeInterval: 0.8, repeats: true) { _ in
+            #if os(iOS)
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            #endif
+        }
+    }
+    
+    func stopAlarm() {
+        isSirenActive = false
+        player?.stop()
+        player = nil
+        vibrationTimer?.invalidate()
+        vibrationTimer = nil
+    }
+    
+    func userSilenceToggle() {
+        if isSirenActive {
+            isMutedByUser = true
+            stopAlarm()
+        } else {
+            isMutedByUser = false
+        }
+    }
+    
+    func resetUserMuteIfNormal() {
+        isMutedByUser = false
+    }
+    
+    private func createSirenWav(isFire: Bool) -> Data? {
+        let sampleRate: Int = 22050
+        let duration: Double = 1.6
+        let numSamples = Int(Double(sampleRate) * duration)
+        
+        let minFreq: Double = isFire ? 700.0 : 600.0
+        let maxFreq: Double = isFire ? 1600.0 : 1100.0
+        
+        var pcmData = Data()
+        var phase: Double = 0.0
+        
+        for i in 0..<numSamples {
+            let t = Double(i) / Double(sampleRate)
+            let progress = (sin(2.0 * .pi * (t / duration)) + 1.0) / 2.0
+            let freq = minFreq + (maxFreq - minFreq) * progress
+            
+            let sampleVal = sin(phase)
+            phase += 2.0 * .pi * freq / Double(sampleRate)
+            if phase > 2.0 * .pi { phase -= 2.0 * .pi }
+            
+            let int16Sample = Int16(clamping: Int(sampleVal * 32767.0))
+            var sampleLE = int16Sample.littleEndian
+            withUnsafeBytes(of: &sampleLE) { bytes in
+                pcmData.append(contentsOf: bytes)
+            }
+        }
+        
+        var wav = Data()
+        let dataSize = UInt32(pcmData.count)
+        let riffSize = UInt32(36 + dataSize)
+        
+        wav.append(contentsOf: [0x52, 0x49, 0x46, 0x46])
+        var rSize = riffSize.littleEndian
+        wav.append(Data(bytes: &rSize, count: 4))
+        wav.append(contentsOf: [0x57, 0x41, 0x56, 0x45])
+        wav.append(contentsOf: [0x66, 0x6D, 0x74, 0x20])
+        var fSize = UInt32(16).littleEndian
+        wav.append(Data(bytes: &fSize, count: 4))
+        var aFmt = UInt16(1).littleEndian
+        wav.append(Data(bytes: &aFmt, count: 2))
+        var nChan = UInt16(1).littleEndian
+        wav.append(Data(bytes: &nChan, count: 2))
+        var sRate = UInt32(sampleRate).littleEndian
+        wav.append(Data(bytes: &sRate, count: 4))
+        var byteRate = UInt32(sampleRate * 1 * 2).littleEndian
+        wav.append(Data(bytes: &byteRate, count: 4))
+        var bAlign = UInt16(2).littleEndian
+        wav.append(Data(bytes: &bAlign, count: 2))
+        var bPerSample = UInt16(16).littleEndian
+        wav.append(Data(bytes: &bPerSample, count: 2))
+        wav.append(contentsOf: [0x64, 0x61, 0x74, 0x61])
+        var dSize = dataSize.littleEndian
+        wav.append(Data(bytes: &dSize, count: 4))
+        
+        wav.append(pcmData)
+        return wav
     }
 }

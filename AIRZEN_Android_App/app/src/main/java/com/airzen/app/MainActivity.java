@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
     private boolean isPolling = false;
     private boolean userInteracting = false;
+    private boolean isManuallyMuted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -290,6 +291,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Banner click to silence/mute continuous siren
+        tvAlertBanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isManuallyMuted = true;
+                if (alarmSoundManager != null) {
+                    alarmSoundManager.stopAlarm();
+                }
+                tvAlertBanner.setText(tvAlertBanner.getText().toString().replace("  [Tap to Silence 🔕]", "") + "  🔕 (Silenced)");
+                Toast.makeText(MainActivity.this, "Alarm Silenced for this event", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void startDataPolling() {
@@ -474,14 +488,18 @@ public class MainActivity extends AppCompatActivity {
             // 7. Alarm & Notification Handling
             if (!"NONE".equalsIgnoreCase(activeAlert)) {
                 tvAlertBanner.setVisibility(View.VISIBLE);
-                tvAlertBanner.setText(alertMsg);
                 boolean isFire = "FIRE_EMERGENCY".equalsIgnoreCase(activeAlert);
                 tvAlertBanner.setBackgroundResource(isFire ? R.drawable.bg_badge_red : R.drawable.bg_badge_orange);
-
-                // Play Audio Siren & Vibrate Phone
-                alarmSoundManager.startAlarm(isFire);
+                if (isManuallyMuted) {
+                    tvAlertBanner.setText(alertMsg + "  🔕 (Silenced)");
+                } else {
+                    tvAlertBanner.setText(alertMsg + "  [Tap to Silence 🔕]");
+                    // Continuous Audio Siren & Vibrate Phone
+                    alarmSoundManager.startAlarm(isFire);
+                }
                 showPushNotification(alertMsg, isFire);
             } else {
+                isManuallyMuted = false;
                 tvAlertBanner.setVisibility(View.GONE);
                 alarmSoundManager.stopAlarm();
             }
